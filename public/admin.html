@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Salt</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="admin-page">
+    <div class="admin-header">
+      <h1>Recipe Admin</h1>
+      <a href="/" class="view-site">← View Site</a>
+    </div>
+
+    <div class="admin-layout">
+      <!-- Add / Edit Recipe Form -->
+      <div class="panel">
+        <h2 id="formTitle">Add Recipe</h2>
+        <form id="recipeForm" enctype="multipart/form-data">
+
+          <div class="field">
+            <label>Hero Image</label>
+            <input type="file" id="heroImageInput" name="heroImage" accept="image/*">
+            <div class="img-preview" id="heroPreview"></div>
+          </div>
+
+          <div class="field">
+            <label>Ingredients</label>
+            <div id="ingredientsList"></div>
+            <button type="button" id="addIngredientBtn" class="btn-secondary">+ Add Ingredient</button>
+          </div>
+
+          <div class="field">
+            <label>Vinegar &amp; Water</label>
+            <div class="vw-grid">
+              <div class="vw-row">
+                <span class="vw-label">Vinegar</span>
+                <input type="number" id="vinegarAmount" placeholder="Amount" min="0" step="any">
+                <input type="text" id="vinegarUnit" placeholder="unit" value="ml" class="unit-input">
+              </div>
+              <div class="vw-row">
+                <span class="vw-label">Water</span>
+                <input type="number" id="waterAmount" placeholder="Amount" min="0" step="any">
+                <input type="text" id="waterUnit" placeholder="unit" value="ml" class="unit-input">
+              </div>
+            </div>
+            <div class="vw-ratio-display" id="vwDisplay">V:W = —</div>
+          </div>
+
+          <div class="field">
+            <label>Photos Link</label>
+            <input type="text" id="photosLink" placeholder="https://...">
+            <p class="hint">This is the URL that "Photos ↗" links to</p>
+          </div>
+
+          <div class="field">
+            <label>Photo Thumbnails</label>
+            <input type="file" id="photosInput" name="photos" accept="image/*" multiple>
+            <p class="hint">These small images appear below the Photos link</p>
+          </div>
+
+          <button type="submit" class="btn-primary" id="submitBtn">Add Recipe</button>
+          <button type="button" class="btn-cancel" id="cancelEditBtn" style="display:none">Cancel Edit</button>
+          <div class="form-msg" id="formMsg"></div>
+        </form>
+      </div>
+
+      <!-- Recipe List -->
+      <div class="panel">
+        <h2>All Recipes</h2>
+        <div id="recipeList"><p class="empty-state">Loading...</p></div>
+      </div>
+    </div>
+  </div>
+  <script src="admin.js"></script>
+</body>
+</html>
