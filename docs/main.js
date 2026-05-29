@@ -71,6 +71,26 @@ function renderExpanded(cell) {
   cell.innerHTML = '';
   cell.classList.add('expanded');
 
+  const topRow = document.createElement('div');
+  topRow.className = 'exp-top-row';
+
+  const numEl = document.createElement('span');
+  numEl.className = 'exp-top-num';
+  numEl.textContent = String(data.recipeNum).padStart(2, '0');
+  topRow.appendChild(numEl);
+
+  if (recipe.date) {
+    const dateEl = document.createElement('span');
+    dateEl.className = 'exp-top-date';
+    const d = new Date(recipe.date + 'T00:00:00');
+    const day = d.getDate();
+    const suffix = [,'st','nd','rd'][day % 100 < 11 || day % 100 > 13 ? day % 10 : 0] || 'th';
+    dateEl.textContent = `${day}${suffix} ${d.toLocaleDateString('en-US', { month: 'long' }).toLowerCase()} ${d.getFullYear()}`;
+    topRow.appendChild(dateEl);
+  }
+
+  cell.appendChild(topRow);
+
   if (recipe.heroImage) {
     const img = document.createElement('img');
     img.src = recipe.heroImage;
@@ -83,13 +103,6 @@ function renderExpanded(cell) {
   header.className = 'exp-recipe-header';
   header.textContent = 'Recipe';
   cell.appendChild(header);
-
-  if (recipe.date) {
-    const dateEl = document.createElement('div');
-    dateEl.className = 'exp-date';
-    dateEl.textContent = new Date(recipe.date + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    cell.appendChild(dateEl);
-  }
 
   if (recipe.ingredients?.length) {
     const ul = document.createElement('ul');
