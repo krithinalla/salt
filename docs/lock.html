@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f5f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .lock-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    h1 {
+      font-size: 1.2rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #222;
+    }
+    input[type="password"] {
+      border: 1px solid #ccc;
+      background: #fff;
+      padding: 10px 14px;
+      font-family: inherit;
+      font-size: 1rem;
+      width: 220px;
+      outline: none;
+    }
+    input[type="password"]:focus {
+      border-color: #888;
+    }
+    button {
+      background: #222;
+      color: #fff;
+      border: none;
+      padding: 10px 28px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+    }
+    button:hover { background: #444; }
+    .error {
+      color: #c0392b;
+      font-size: 0.85rem;
+      min-height: 1em;
+    }
+  </style>
+</head>
+<body>
+  <div class="lock-box">
+    <h1>Salt</h1>
+    <form id="lockForm">
+      <input type="password" id="passwordInput" placeholder="password" autofocus>
+    </form>
+    <button onclick="document.getElementById('lockForm').requestSubmit()">Enter</button>
+    <div class="error" id="lockError"></div>
+  </div>
+  <script src="auth.js"></script>
+</body>
+</html>
