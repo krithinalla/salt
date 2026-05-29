@@ -5,8 +5,8 @@ let activeRecipeId = null;
 const cellDataMap = new Map();
 
 async function init() {
-  const res = await fetch('/api/recipes');
-  recipes = await res.json();
+  const snapshot = await db.collection('recipes').orderBy('createdAt').get();
+  recipes = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   renderGrid();
 }
 

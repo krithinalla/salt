@@ -1,4 +1,6 @@
 let currentEditId = null;
+let currentHeroImageUrl = null;
+let currentPhotos = [];
 
 function gcd(a, b) {
   return b === 0 ? a : gcd(b, a % b);
@@ -56,8 +58,16 @@ function getIngredients() {
     .filter(ing => ing.name);
 }
 
+async function uploadFile(file, path) {
+  const ref = storage.ref(path);
+  await ref.put(file);
+  return ref.getDownloadURL();
+}
+
 function setEditMode(recipe) {
   currentEditId = recipe.id;
+  currentHeroImageUrl = recipe.heroImage || null;
+  currentPhotos = recipe.photos || [];
 
   document.getElementById('ingredientsList').innerHTML = '';
   (recipe.ingredients || []).forEach(ing => addIngredientRow(ing.name, ing.amount));
@@ -88,6 +98,8 @@ function setEditMode(recipe) {
 
 function resetForm() {
   currentEditId = null;
+  currentHeroImageUrl = null;
+  currentPhotos = [];
   document.getElementById('recipeForm').reset();
   document.getElementById('ingredientsList').innerHTML = '';
   document.getElementById('heroPreview').innerHTML = '';
@@ -100,8 +112,8 @@ function resetForm() {
 }
 
 async function loadRecipes() {
-  const res = await fetch('/api/recipes');
-  const recipes = await res.json();
+  const snapshot = await db.collection('recipes').orderBy('createdAt').get();
+  const recipes = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   const list = document.getElementById('recipeList');
 
   if (!recipes.length) {
@@ -166,7 +178,7 @@ async function loadRecipes() {
 async function deleteRecipe(id) {
   if (!confirm('Delete this recipe?')) return;
   if (currentEditId === id) resetForm();
-  await fetch(`/api/recipes/${id}`, { method: 'DELETE' });
+  await db.collection('recipes').doc(id).delete();
   loadRecipes();
 }
 
@@ -195,34 +207,53 @@ document.getElementById('recipeForm').addEventListener('submit', async e => {
   msgEl.style.color = '#27ae60';
   msgEl.textContent = 'Saving…';
 
-  const formData = new FormData();
-  const heroFile = document.getElementById('heroImageInput').files[0];
-  if (heroFile) formData.append('heroImage', heroFile);
+  try {
+    const heroFile = document.getElementById('heroImageInput').files[0];
+    const photoFiles = Array.from(document.getElementById('photosInput').files);
 
-  const photoFiles = document.getElementById('photosInput').files;
-  for (const f of photoFiles) formData.append('photos', f);
+    let heroImageUrl = currentHeroImageUrl;
+    let photos = currentPhotos;
 
-  formData.append('ingredients', JSON.stringify(getIngredients()));
-  formData.append('vinegar',     document.getElementById('vinegarAmount').value);
-  formData.append('water',       document.getElementById('waterAmount').value);
-  formData.append('vinegarUnit', document.getElementById('vinegarUnit').value || 'ml');
-  formData.append('waterUnit',   document.getElementById('waterUnit').value   || 'ml');
-  formData.append('photosLink',  document.getElementById('photosLink').value);
+    if (heroFile) {
+      heroImageUrl = await uploadFile(heroFile, `heroes/${Date.now()}_${heroFile.name.replace(/\s/g, '_')}`);
+    }
 
-  const isEditing = !!currentEditId;
-  const url    = isEditing ? `/api/recipes/${currentEditId}` : '/api/recipes';
-  const method = isEditing ? 'PUT' : 'POST';
+    if (photoFiles.length) {
+      photos = [];
+      for (const file of photoFiles) {
+        const url = await uploadFile(file, `photos/${Date.now()}_${file.name.replace(/\s/g, '_')}`);
+        photos.push(url);
+      }
+    }
 
-  const res = await fetch(url, { method, body: formData });
+    const recipeData = {
+      heroImage: heroImageUrl || null,
+      ingredients: getIngredients(),
+      vinegar: parseFloat(document.getElementById('vinegarAmount').value) || 0,
+      water: parseFloat(document.getElementById('waterAmount').value) || 0,
+      vinegarUnit: document.getElementById('vinegarUnit').value || 'ml',
+      waterUnit: document.getElementById('waterUnit').value || 'ml',
+      photosLink: document.getElementById('photosLink').value,
+      photos,
+    };
 
-  if (res.ok) {
+    const isEditing = !!currentEditId;
+
+    if (isEditing) {
+      await db.collection('recipes').doc(currentEditId).update(recipeData);
+    } else {
+      recipeData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      await db.collection('recipes').add(recipeData);
+    }
+
     msgEl.textContent = isEditing ? 'Recipe updated!' : 'Recipe added!';
     setTimeout(() => { msgEl.textContent = ''; }, 2500);
     resetForm();
     loadRecipes();
-  } else {
+  } catch (err) {
     msgEl.style.color = '#c0392b';
     msgEl.textContent = 'Error saving recipe.';
+    console.error(err);
   }
 });
 
