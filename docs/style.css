@@ -19,7 +19,7 @@ body {
 }
 
 .page-title {
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 400;
   color: #E82929;
   letter-spacing: -0.2px;
@@ -124,7 +124,7 @@ body {
 
 .exp-recipe-header {
   font-family: 'Inter', sans-serif;
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 400;
   color: #E82929;
   text-decoration: underline;
@@ -141,7 +141,7 @@ body {
   display: flex;
   align-items: baseline;
   font-family: 'Inter', sans-serif;
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 400;
   color: #E82929;
   line-height: 1.7;
@@ -163,7 +163,7 @@ body {
 
 .exp-vw-ratio {
   font-family: 'Inter', sans-serif;
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 400;
   color: #E82929;
   margin-bottom: 2px;
@@ -178,7 +178,7 @@ body {
 .exp-photos-link {
   display: inline-block;
   font-family: 'Inter', sans-serif;
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 400;
   color: #E82929;
   text-decoration: underline;
