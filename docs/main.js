@@ -25,6 +25,7 @@ function makeDashedLine(label, value) {
 
 function makeIngLine(name, amount) {
   const cap = name.charAt(0).toUpperCase() + name.slice(1);
+  if (!amount || !amount.toString().trim()) return { prefix: '+ ', content: cap };
   return makeDashedLine(cap, amount);
 }
 

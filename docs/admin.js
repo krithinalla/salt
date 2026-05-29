@@ -29,7 +29,14 @@ function addIngredientRow(name = '', amount = '') {
   nameInput.type = 'text';
   nameInput.className = 'ing-name';
   nameInput.placeholder = 'Ingredient name';
+  nameInput.setAttribute('autocapitalize', 'words');
   nameInput.value = name;
+  nameInput.addEventListener('input', function() {
+    const start = this.selectionStart;
+    const end = this.selectionEnd;
+    this.value = this.value.replace(/(?:^|\s)\S/g, c => c.toUpperCase());
+    this.setSelectionRange(start, end);
+  });
 
   const amountInput = document.createElement('input');
   amountInput.type = 'text';
