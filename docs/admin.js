@@ -73,6 +73,7 @@ function setEditMode(recipe) {
   (recipe.ingredients || []).forEach(ing => addIngredientRow(ing.name, ing.amount));
   if (!recipe.ingredients?.length) addIngredientRow();
 
+  document.getElementById('recipeDate').value     = recipe.date || '';
   document.getElementById('vinegarAmount').value = recipe.vinegar || '';
   document.getElementById('waterAmount').value   = recipe.water   || '';
   document.getElementById('vinegarUnit').value   = recipe.vinegarUnit || 'ml';
@@ -228,6 +229,7 @@ document.getElementById('recipeForm').addEventListener('submit', async e => {
 
     const recipeData = {
       heroImage: heroImageUrl || null,
+      date: document.getElementById('recipeDate').value || null,
       ingredients: getIngredients(),
       vinegar: parseFloat(document.getElementById('vinegarAmount').value) || 0,
       water: parseFloat(document.getElementById('waterAmount').value) || 0,

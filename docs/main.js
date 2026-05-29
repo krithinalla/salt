@@ -84,6 +84,13 @@ function renderExpanded(cell) {
   header.textContent = 'Recipe';
   cell.appendChild(header);
 
+  if (recipe.date) {
+    const dateEl = document.createElement('div');
+    dateEl.className = 'exp-date';
+    dateEl.textContent = new Date(recipe.date + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    cell.appendChild(dateEl);
+  }
+
   if (recipe.ingredients?.length) {
     const ul = document.createElement('ul');
     ul.className = 'exp-ingredients';
