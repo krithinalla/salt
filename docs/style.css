@@ -147,14 +147,20 @@ body {
   line-height: 1.7;
 }
 
-.ing-prefix {
+.ing-left {
   flex-shrink: 0;
-  white-space: pre;
+  white-space: nowrap;
 }
 
-.ing-content {
-  word-break: break-word;
-  overflow-wrap: break-word;
+.ing-dashes {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ing-right {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .exp-vw {

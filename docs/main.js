@@ -19,27 +19,36 @@ function calcVWRatio(v, w) {
 }
 
 function makeDashedLine(label, value) {
-  const dashes = Math.max(2, 18 - label.length);
-  return { prefix: '+ ', content: `${label}${'-'.repeat(dashes)}${value}` };
+  return { name: label, value };
 }
 
 function makeIngLine(name, amount) {
   const cap = name.charAt(0).toUpperCase() + name.slice(1);
-  if (!amount || !amount.toString().trim()) return { prefix: '+ ', content: cap };
-  return makeDashedLine(cap, amount);
+  const v = amount && amount.toString().trim() ? amount : null;
+  return { name: cap, value: v };
 }
 
-function buildIngLineEl(prefix, content) {
+function buildIngLineEl(name, value) {
   const li = document.createElement('li');
   li.className = 'ing-line';
-  const pre = document.createElement('span');
-  pre.className = 'ing-prefix';
-  pre.textContent = prefix;
-  const cnt = document.createElement('span');
-  cnt.className = 'ing-content';
-  cnt.textContent = content;
-  li.appendChild(pre);
-  li.appendChild(cnt);
+
+  const left = document.createElement('span');
+  left.className = 'ing-left';
+  left.textContent = '+ ' + name;
+  li.appendChild(left);
+
+  if (value) {
+    const dashes = document.createElement('span');
+    dashes.className = 'ing-dashes';
+    dashes.textContent = '-'.repeat(80);
+    li.appendChild(dashes);
+
+    const right = document.createElement('span');
+    right.className = 'ing-right';
+    right.textContent = value;
+    li.appendChild(right);
+  }
+
   return li;
 }
 
@@ -109,8 +118,8 @@ function renderExpanded(cell) {
     const ul = document.createElement('ul');
     ul.className = 'exp-ingredients';
     recipe.ingredients.forEach(ing => {
-      const { prefix, content } = makeIngLine(ing.name, ing.amount);
-      ul.appendChild(buildIngLineEl(prefix, content));
+      const { name, value } = makeIngLine(ing.name, ing.amount);
+      ul.appendChild(buildIngLineEl(name, value));
     });
     cell.appendChild(ul);
   }
@@ -130,8 +139,8 @@ function renderExpanded(cell) {
       if (recipe[key]) {
         const label = key.charAt(0).toUpperCase() + key.slice(1);
         const value = `${recipe[key]}${recipe[key + 'Unit'] || 'ml'}`;
-        const { prefix, content } = makeDashedLine(label, value);
-        const el = buildIngLineEl(prefix, content);
+        const { name } = makeDashedLine(label, value);
+        const el = buildIngLineEl(name, value);
         el.className = 'ing-line exp-vw-line';
         vwDiv.appendChild(el);
       }
