@@ -135,6 +135,7 @@ body {
   list-style: none;
   margin-bottom: 18px;
   line-height: 2;
+  width: 100%;
 }
 
 .ing-line {
@@ -165,6 +166,7 @@ body {
 
 .exp-vw {
   margin-bottom: 18px;
+  width: 100%;
 }
 
 .exp-vw-ratio {
