@@ -155,11 +155,15 @@ function renderExpanded(cell) {
     if (recipe.photos?.length) {
       const thumbs = document.createElement('div');
       thumbs.className = 'exp-photo-thumbs';
-      recipe.photos.forEach(src => {
+      recipe.photos.forEach((src, i) => {
         const img = document.createElement('img');
         img.src = src;
         img.className = 'exp-photo-thumb';
         img.alt = 'Photo';
+        img.addEventListener('click', e => {
+          e.stopPropagation();
+          openLightbox(recipe.photos, i);
+        });
         thumbs.appendChild(img);
       });
       photosDiv.appendChild(thumbs);
@@ -235,4 +239,35 @@ function renderGrid() {
 }
 
 document.addEventListener('click', closeExpanded);
+
+let lightboxPhotos = [];
+let lightboxIndex = 0;
+
+function openLightbox(photos, index) {
+  lightboxPhotos = photos;
+  lightboxIndex = index;
+  document.getElementById('lightboxImg').src = photos[index];
+  document.getElementById('lightbox').classList.add('active');
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('active');
+}
+
+document.getElementById('lightbox').addEventListener('click', closeLightbox);
+
+document.addEventListener('keydown', e => {
+  const lb = document.getElementById('lightbox');
+  if (!lb.classList.contains('active')) return;
+  if (e.key === 'ArrowRight') {
+    lightboxIndex = (lightboxIndex + 1) % lightboxPhotos.length;
+    document.getElementById('lightboxImg').src = lightboxPhotos[lightboxIndex];
+  } else if (e.key === 'ArrowLeft') {
+    lightboxIndex = (lightboxIndex - 1 + lightboxPhotos.length) % lightboxPhotos.length;
+    document.getElementById('lightboxImg').src = lightboxPhotos[lightboxIndex];
+  } else if (e.key === 'Escape') {
+    closeLightbox();
+  }
+});
+
 init();

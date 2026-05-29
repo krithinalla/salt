@@ -193,6 +193,32 @@ body {
   flex-wrap: wrap;
 }
 
+#lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  cursor: zoom-out;
+}
+
+#lightbox.active {
+  display: flex;
+}
+
+#lightboxImg {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.exp-photo-thumb {
+  cursor: zoom-in;
+}
+
 .exp-photo-thumb {
   width: 68px;
   height: 68px;

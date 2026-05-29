@@ -82,6 +82,15 @@ function setEditMode(recipe) {
 
   document.getElementById('photosLink').value = recipe.photosLink || '';
 
+  const photoPreview = document.getElementById('photoPreview');
+  photoPreview.innerHTML = '';
+  (recipe.photos || []).forEach(src => {
+    const img = document.createElement('img');
+    img.src = src;
+    img.style.cssText = 'width:68px;height:68px;object-fit:cover;border-radius:6px;border:2px solid #ccc;';
+    photoPreview.appendChild(img);
+  });
+
   const preview = document.getElementById('heroPreview');
   preview.innerHTML = '';
   if (recipe.heroImage) {
@@ -104,6 +113,7 @@ function resetForm() {
   document.getElementById('recipeForm').reset();
   document.getElementById('ingredientsList').innerHTML = '';
   document.getElementById('heroPreview').innerHTML = '';
+  document.getElementById('photoPreview').innerHTML = '';
   document.getElementById('vwDisplay').textContent = 'V:W = —';
   addIngredientRow();
   document.getElementById('formTitle').textContent   = 'Add Recipe';
